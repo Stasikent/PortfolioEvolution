@@ -6,6 +6,27 @@
   },
   "items": [
     {
+      "number": 47,
+      "title": "Домашняя работа №47",
+      "drive_file_id": "1tKV8ViyH7iGhpgREawtqNcNA9bfy2dLt",
+      "verified_topics": ["Python", "NumPy", "pandas", "TensorFlow", "Keras", "genetic algorithms", "hyperparameter optimization", "MNIST", "Fashion-MNIST", "Gymnasium"],
+      "notes": "Verified from notebook source. Implements genetic-algorithm-based neural-network hyperparameter optimization and related optimization experiments."
+    },
+    {
+      "number": 48,
+      "title": "Домашняя работа №48",
+      "drive_file_id": "1LALn7-UZAyyDm-q17SqTL13OEovu0zxy",
+      "verified_topics": ["Python", "pandas", "NumPy", "scikit-learn", "KMeans", "clustering", "StandardScaler", "silhouette score", "PCA", "TensorFlow", "Keras", "autoencoder"],
+      "notes": "Verified from notebook source. Customer segmentation with K-Means, cluster-quality metrics, PCA and an autoencoder-based clustering experiment."
+    },
+    {
+      "number": 49,
+      "title": "Домашняя работа №49",
+      "drive_file_id": "12siK04dVtDGRg-LwEMjBdgzR-Q5uwZsD",
+      "verified_topics": ["Python", "faster-whisper", "Whisper", "SpeechRecognition", "Google Web Speech API", "librosa", "MFCC", "SVM", "scikit-learn", "pandas", "speech recognition", "audio processing"],
+      "notes": "Verified from notebook source. Voice-command recognition, noisy-speech evaluation and language identification from spectral/MFCC features."
+    },
+    {
       "number": 50,
       "title": "Домашняя работа №50",
       "drive_file_id": "1CGxtzOf9StfoGcfLcrBR2wvd12L7v1qU",
@@ -16,9 +37,9 @@
       "number": 51,
       "title": "Домашняя работа №51",
       "drive_file_id": "19mR-mlcAijbiZoBgrX78YkUDaxqPszYc",
-      "verified_topics": [],
-      "notes": "Discovered; detailed classification pending ingestion."
+      "verified_topics": ["Python", "REST API", "Requests", "Telegram Bot API", "OpenRouter API", "SQLite", "Flet", "Android build", "environment variables", "logging", "error handling", "authentication", "SHA256"],
+      "notes": "Verified from notebook source. AI chat application extended with Telegram balance alerts, OpenRouter integration, SQLite/PIN authentication, logging/error handling and Android packaging."
     }
   ],
-  "policy": "Only topics supported by parsed notebook source are promoted to verified_topics. Embedded images/base64 are excluded from keyword evidence."
+  "policy": "Only topics supported by parsed notebook markdown/code cells are promoted to verified_topics. Embedded images/base64 and generated outputs are excluded from keyword evidence."
 }
