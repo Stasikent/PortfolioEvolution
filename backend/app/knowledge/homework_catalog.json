@@ -1,0 +1,24 @@
+{
+  "source": {
+    "type": "google_drive_folder",
+    "folder_id": "1iexXsGRccS11-rBqJPPkWlxLfWfUS2Bx",
+    "description": "ML Engineer coursework notebooks (Google Colab). Source documents remain in Google Drive and are not committed to this repository."
+  },
+  "items": [
+    {
+      "number": 50,
+      "title": "Домашняя работа №50",
+      "drive_file_id": "1CGxtzOf9StfoGcfLcrBR2wvd12L7v1qU",
+      "verified_topics": ["Python", "PyTorch", "Hugging Face Transformers", "speech/ASR", "TTS", "Whisper", "MarianMT", "VseGPT API", "pandas"],
+      "notes": "Verified from notebook source. Includes Transformers-based speech tasks, Whisper ASR, translation/TTS pipeline and external LLM API usage."
+    },
+    {
+      "number": 51,
+      "title": "Домашняя работа №51",
+      "drive_file_id": "19mR-mlcAijbiZoBgrX78YkUDaxqPszYc",
+      "verified_topics": [],
+      "notes": "Discovered; detailed classification pending ingestion."
+    }
+  ],
+  "policy": "Only topics supported by parsed notebook source are promoted to verified_topics. Embedded images/base64 are excluded from keyword evidence."
+}
