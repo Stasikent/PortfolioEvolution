@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  PORTFOLIO_URL: http://127.0.0.1:5186
+
 jobs:
   frontend:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
         run: |
           npm run preview -- --host 127.0.0.1 --port 5186 > /tmp/portfolio-preview.log 2>&1 &
           for i in {1..30}; do
-            if curl --fail --silent http://127.0.0.1:5186/ > /dev/null; then
+            if curl --fail --silent "$PORTFOLIO_URL/" > /dev/null; then
               exit 0
             fi
             sleep 1
