@@ -1,0 +1,6 @@
+.retro-snow,.retro-cursor-trail{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:15}
+.retro-snow span{position:absolute;left:var(--snow-x);top:-12px;width:var(--snow-size);height:var(--snow-size);border-radius:50%;background:#fff;box-shadow:0 0 2px #517699;opacity:.5;animation:retro-snowfall var(--snow-duration) var(--snow-delay) linear infinite}
+.retro-cursor-trail span{position:absolute;color:#6fc8ff;text-shadow:0 0 2px #193658;font:12px Arial;opacity:0}
+@keyframes retro-snowfall{from{transform:translate3d(0,-12px,0)}to{transform:translate3d(25px,105vh,0)}}
+@media(prefers-reduced-motion:reduce){.retro-snow,.retro-cursor-trail{display:none}}
+@media(hover:none),(pointer:coarse){.retro-cursor-trail{display:none}}

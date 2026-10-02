@@ -1,0 +1,329 @@
+.portal {
+  background: #c5cbd5;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    #b8c0cd 3px
+  );
+  min-height: 100vh;
+  padding: 24px 12px 100px;
+  color: #111;
+  font:
+    12px/1.45 Verdana,
+    Arial,
+    sans-serif;
+}
+.portal a {
+  color: #003bb3;
+  text-decoration: underline;
+}
+.portal a:visited {
+  color: #652887;
+}
+.portal button {
+  background: #eee;
+  border: 2px outset #fff;
+  color: #111;
+  padding: 3px 6px;
+  font: 12px Arial;
+}
+.portal-shell {
+  max-width: 940px;
+  margin: auto;
+  border: 1px solid #61728b;
+  background: #fff;
+  box-shadow: 3px 3px 0 #828c9c;
+}
+.portal-topline {
+  background: #173d73;
+  color: white;
+  font: bold 10px Arial;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+}
+.portal-masthead {
+  padding: 13px;
+  background: linear-gradient(90deg, #e0e9f6, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.portal-masthead h1 {
+  font:
+    bold 23px Georgia,
+    serif;
+  color: #153865;
+  margin: 0;
+}
+.portal-masthead p {
+  font: 11px Arial;
+  margin: 4px 0;
+}
+.portal-logo {
+  float: left;
+  font:
+    bold 28px "Times New Roman",
+    serif;
+  color: #174b85;
+  border: 2px ridge #9caec5;
+  padding: 8px;
+  margin-right: 12px;
+  background: #fff;
+}
+.web-badge {
+  border: 1px solid #24466f;
+  padding: 5px 8px;
+  font: 9px/1.5 Verdana;
+  text-align: center;
+  color: #24466f;
+}
+.portal-header nav {
+  padding: 6px;
+  text-align: center;
+  background: #d6e0ef;
+  border-top: 1px solid #6e88ad;
+  border-bottom: 1px solid #6e88ad;
+  line-height: 2;
+}
+.portal-header nav a {
+  margin: 0 6px;
+}
+.portal-columns {
+  display: grid;
+  grid-template-columns: 165px minmax(0, 1fr) 145px;
+  gap: 8px;
+  padding: 8px;
+}
+.portal-panel {
+  border: 1px solid #7891b1;
+  margin-bottom: 9px;
+  background: #fff;
+}
+.portal-panel > h2,
+.welcome h2 {
+  font: bold 12px Arial;
+  background: #dbe5f3;
+  color: #173f76;
+  margin: 0;
+  padding: 5px 7px;
+  border-bottom: 1px solid #7891b1;
+}
+.portal-sidebar ul {
+  padding-left: 22px;
+  margin: 8px 3px;
+}
+.portal-sidebar li {
+  margin: 5px 0;
+}
+.portal-sidebar ul ul {
+  padding-left: 12px;
+}
+.portal-sidebar .portal-panel > p,
+.portal-right p {
+  margin: 8px;
+}
+.portal-sidebar button {
+  margin: 0 7px 9px;
+}
+.period-note {
+  text-align: center;
+  border: 1px dashed #7e8ba1;
+  padding: 8px;
+  font: 10px/1.5 Arial;
+  color: #384554;
+}
+.period-note small {
+  font-size: 9px;
+}
+.welcome {
+  border: 1px solid #879cb7;
+  margin-bottom: 8px;
+  background: #fffde8;
+}
+.welcome > strong,
+.welcome > p {
+  display: block;
+  margin: 9px;
+}
+.welcome h2 {
+  background: #f0edc5;
+  color: #4e4600;
+  border-color: #b6ac77;
+}
+.program-listing {
+  padding: 9px;
+  border-bottom: 1px dotted #7891b1;
+}
+.program-listing:last-child {
+  border: 0;
+}
+.directory-path {
+  font: 9px Arial;
+  color: #526178;
+}
+.program-listing h3 {
+  font: bold 15px Arial;
+  color: #173f76;
+  margin: 7px 0;
+}
+.program-listing p {
+  margin: 7px 0;
+}
+.new-badge {
+  font: bold 9px Arial;
+  background: #ffed76;
+  color: #a82700;
+  border: 1px solid #b89432;
+  padding: 1px 3px;
+  vertical-align: middle;
+}
+.portal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  font: 11px Arial;
+}
+.portal-journey {
+  background: #edf2f9;
+  padding: 5px;
+  font: 10px/1.7 Verdana;
+}
+.portal-story,
+.panel-content {
+  padding: 8px;
+  margin: 0;
+}
+.portal-story {
+  border-bottom: 1px dotted #7891b1;
+}
+.portal-story:last-child {
+  border: 0;
+}
+.portal-story h3,
+.panel-content h3 {
+  font: bold 12px Arial;
+  margin: 0 0 5px;
+}
+.portal-story p {
+  margin: 0;
+}
+.portal-skills {
+  columns: 2;
+  padding-left: 18px;
+  margin: 8px 0 12px;
+}
+.portal-skills li {
+  break-inside: avoid;
+}
+.portal-process {
+  padding: 0 10px 0 30px;
+  line-height: 1.9;
+  font: 11px/1.9 Arial;
+}
+.portal-process strong {
+  background: #fff2a0;
+}
+.visitor-counter {
+  display: inline-block;
+  background: #111;
+  color: #8dff87;
+  border: 2px inset #eee;
+  font: 18px monospace;
+  letter-spacing: 2px;
+  padding: 1px 4px;
+  margin: 4px 0;
+}
+.portal-right small {
+  font: 9px Arial;
+}
+.html-badge {
+  text-align: center;
+  background: #efe6b5;
+  border: 2px outset #eee;
+  color: #20294c;
+  font: 14px Georgia;
+  padding: 6px;
+}
+.html-badge b {
+  font: 8px Arial;
+}
+.portal-footer {
+  text-align: center;
+  padding: 12px;
+  border-top: 1px solid #7891b1;
+  background: #e1e7f0;
+  font: 10px/1.9 Arial;
+}
+@media (max-width: 760px) {
+  .portal-columns {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+  .portal-right {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .html-badge {
+    display: none;
+  }
+}
+@media (max-width: 520px) {
+  .portal {
+    padding: 8px 6px 95px;
+  }
+  .portal-columns {
+    display: flex;
+    flex-direction: column;
+  }
+  .portal-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .portal-sidebar .portal-panel {
+    margin-bottom: 0;
+  }
+  .period-note {
+    display: none;
+  }
+  .portal-masthead h1 {
+    font-size: 19px;
+  }
+  .portal-logo {
+    display: none;
+  }
+  .web-badge {
+    font-size: 8px;
+    padding: 4px;
+  }
+  .portal-header nav a {
+    margin: 0 3px;
+  }
+  .portal {
+    font-size: 12px;
+  }
+  .portal-main {
+    min-width: 0;
+  }
+  .portal-right {
+    display: grid;
+  }
+  .portal-panel {
+    overflow-wrap: anywhere;
+  }
+  .portal-skills {
+    columns: 1;
+  }
+  .portal-case-facts div { grid-template-columns: 1fr; gap: 2px; }
+}
+.portal-case-facts { margin:9px 0; border:1px solid #9db2cf; background:#f5f8fc; }
+.portal-case-facts div { display:grid; grid-template-columns:105px 1fr; padding:4px 6px; border-bottom:1px dotted #9db2cf; }
+.portal-case-facts div:last-child { border-bottom:0; }
+.portal-case-facts dt { font-weight:bold; }
+.portal-case-facts dd { margin:0; }
+.portal #contact .panel-content a { display:block; width:fit-content; max-width:100%; margin-block:6px; overflow-wrap:anywhere; }
+@media (max-width: 520px) { .portal-case-facts div { grid-template-columns:1fr; gap:2px; } }

@@ -1,0 +1,23 @@
+@media (prefers-reduced-motion: no-preference) {
+  .modern .primary-link:hover {
+    transform: translateY(-3px);
+  }
+  .modern a,
+  .modern button {
+    transition:
+      color 0.18s,
+      background 0.18s,
+      transform 0.18s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
