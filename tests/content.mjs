@@ -23,7 +23,11 @@ try {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       if (era === 2026) {
         await page.locator(".hero").screenshot({ path: `screenshots/hero-2026-${width}.png` });
-        await page.getByRole("navigation", { name: "Portfolio shortcuts" }).getByRole("link", { name: /MIS-Bot/ }).click();
+        // Test navigation by its stable destination instead of translated accessible names.
+        // This keeps the test valid for RU/EN and future Smart Translation languages.
+        const misBotLink = page.locator('nav a[href="#mis-bot"]').first();
+        await misBotLink.waitFor({ state: "visible" });
+        await misBotLink.click();
         assert.equal(new URL(page.url()).hash, "#mis-bot");
       }
     }
