@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { PortfolioAssistant } from "./components/PortfolioAssistant";
 import { EraProvider } from "./core/EraProvider";
 import { EraRouter } from "./core/EraRouter";
 import { EraTimeline } from "./core/EraTimeline";
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       </a>
       <EraTimeline />
       <EraRouter />
+      <PortfolioAssistant />
     </EraProvider> : <NotFound />}
   </React.StrictMode>,
 );
