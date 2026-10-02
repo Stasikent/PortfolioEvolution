@@ -17,6 +17,17 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
+      - name: Start preview server
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 5186 > /tmp/portfolio-preview.log 2>&1 &
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:5186/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/portfolio-preview.log
+          exit 1
       - run: npm run test:content
       - run: npm run test:e2e
 
