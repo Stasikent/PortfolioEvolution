@@ -3,11 +3,14 @@ import { readPosition, targetFor, type LogicalPosition } from "./logicalPosition
 export type Era = 2002 | 2006 | 2009 | 2013 | 2020 | 2026;
 export const implementedEras = [2002, 2006, 2009, 2013, 2026] as const satisfies readonly Era[];
 export type ImplementedEra = (typeof implementedEras)[number];
+export type Language = "ru" | "en";
 type EraState = {
   era: ImplementedEra;
   setEra: (era: ImplementedEra) => void;
   effectsEnabled: boolean;
   setEffectsEnabled: (enabled: boolean) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
 };
 const EraContext = createContext<EraState | null>(null);
 
@@ -16,13 +19,33 @@ function eraFromUrl(): ImplementedEra {
   const value = Number(new URLSearchParams(window.location.search).get("era"));
   return implementedEras.includes(value as ImplementedEra) ? value as ImplementedEra : 2026;
 }
+function languageFromStorage(): Language {
+  if (typeof window === "undefined") return "ru";
+  const urlValue = new URLSearchParams(window.location.search).get("lang");
+  if (urlValue === "ru" || urlValue === "en") return urlValue;
+  const stored = window.localStorage.getItem("portfolio-language");
+  return stored === "en" ? "en" : "ru";
+}
 
 export function EraProvider({ children }: { children: ReactNode }) {
   const [era, updateEra] = useState<ImplementedEra>(eraFromUrl);
   const [effectsEnabled, setEffectsEnabled] = useState(true);
+  const [language, updateLanguage] = useState<Language>(languageFromStorage);
   const pendingPosition = useRef<LogicalPosition | null>(null);
   const restored = useRef<{ position: LogicalPosition; scrollY: number } | null>(null);
   const initialHashHandled = useRef(false);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    window.localStorage.setItem("portfolio-language", language);
+  }, [language]);
+
+  function setLanguage(next: Language) {
+    updateLanguage(next);
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", next);
+    window.history.replaceState(null, "", url);
+  }
 
   useEffect(() => {
     const clearPosition = () => { restored.current = null; };
@@ -79,7 +102,7 @@ export function EraProvider({ children }: { children: ReactNode }) {
     updateEra(next);
   }
   return (
-    <EraContext.Provider value={{ era, setEra, effectsEnabled, setEffectsEnabled }}>
+    <EraContext.Provider value={{ era, setEra, effectsEnabled, setEffectsEnabled, language, setLanguage }}>
       {children}
     </EraContext.Provider>
   );
