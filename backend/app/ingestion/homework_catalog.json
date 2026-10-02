@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "source": "ML Engineer coursework (Google Colab)",
+  "verification_policy": "Skills are recorded only when supported by notebook markdown/code cells. Embedded base64 media and generated outputs are excluded from skill detection.",
+  "homeworks": [
+    {
+      "number": 50,
+      "title": "Speech synthesis, voice assistant and speech translation",
+      "drive_id": "1CGxtzOf9StfoGcfLcrBR2wvd12L7v1qU",
+      "url": "https://drive.google.com/file/d/1CGxtzOf9StfoGcfLcrBR2wvd12L7v1qU/view",
+      "verified_skills": ["Python", "PyTorch", "Hugging Face Transformers", "Whisper", "ASR", "MarianMT", "TTS", "pandas", "LLM API"],
+      "summary": "Implemented speech synthesis, a voice assistant, and bidirectional speech translation using speech recognition, translation and TTS components."
+    },
+    {
+      "number": 51,
+      "title": "AI Chat desktop/mobile application",
+      "drive_id": "19mR-mlcAijbiZoBgrX78YkUDaxqPszYc",
+      "url": "https://drive.google.com/file/d/19mR-mlcAijbiZoBgrX78YkUDaxqPszYc/view",
+      "verified_skills": ["Python", "REST API", "Requests", "Telegram Bot API", "OpenRouter API", "SQLite", "Flet", "Android build", "environment variables", "logging", "error handling", "authentication", "SHA256"],
+      "summary": "Extended an AI Chat application with Telegram low-balance alerts, OpenRouter balance monitoring, local authentication/PIN storage in SQLite, error handling and Android APK packaging with Flet."
+    }
+  ]
+}
