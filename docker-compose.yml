@@ -22,6 +22,27 @@ services:
       qdrant:
         condition: service_started
 
+  coursework-sync:
+    build:
+      context: ./backend
+    profiles: ["coursework-sync"]
+    command: ["/bin/sh", "-c", "while true; do /bin/sh /app/scripts/sync-coursework.sh || true; sleep $${COURSEWORK_SYNC_INTERVAL_SECONDS:-21600}; done"]
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION: portfolio_knowledge
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY:-${LLM_API_KEY:-}}
+      EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-https://api.vsegpt.ru/v1}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
+      COURSEWORK_CACHE_DIR: /data/coursework
+      DRIVE_BATCH_SIZE: ${DRIVE_BATCH_SIZE:-32}
+      COURSEWORK_SYNC_INTERVAL_SECONDS: ${COURSEWORK_SYNC_INTERVAL_SECONDS:-21600}
+    volumes:
+      - coursework_cache:/data/coursework
+    depends_on:
+      qdrant:
+        condition: service_started
+    restart: unless-stopped
+
   qdrant:
     image: qdrant/qdrant:latest
     ports:
