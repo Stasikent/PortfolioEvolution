@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from app.retrieval import VectorStore
 
-app = FastAPI(title="Portfolio Evolution AI", version="0.4.0")
+app = FastAPI(title="Portfolio Evolution AI", version="0.5.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")],
@@ -22,6 +22,7 @@ app.add_middleware(
 
 vector_store = VectorStore()
 TRANSLATION_CACHE_PATH = Path(os.getenv("TRANSLATION_CACHE_PATH", "/tmp/portfolio-translations.json"))
+COURSEWORK_CACHE_DIR = Path(os.getenv("COURSEWORK_CACHE_DIR", "/data/coursework"))
 
 class Source(BaseModel):
     title: str
@@ -68,6 +69,16 @@ def load_translation_cache() -> dict:
         if TRANSLATION_CACHE_PATH.exists(): return json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))
     except Exception: pass
     return {}
+
+def load_coursework_sync_status() -> dict:
+    status_path = COURSEWORK_CACHE_DIR / ".sync-status.json"
+    try:
+        if status_path.exists():
+            value = json.loads(status_path.read_text(encoding="utf-8"))
+            if isinstance(value, dict): return value
+    except Exception as exc:
+        return {"status": "unreadable", "error": type(exc).__name__}
+    return {"status": "not_started"}
 
 def save_translation_cache(cache: dict) -> None:
     try:
@@ -124,7 +135,13 @@ async def call_llm(question: str, sources: list[Source], language: str) -> str:
     return response.json()["choices"][0]["message"]["content"].strip()
 
 @app.get("/api/health")
-async def health(): return {"status": "ok", "service": "portfolio-evolution-ai", "phase": "multilingual-rag"}
+async def health():
+    return {
+        "status": "ok",
+        "service": "portfolio-evolution-ai",
+        "phase": "multilingual-rag",
+        "coursework_sync": load_coursework_sync_status(),
+    }
 
 @app.post("/api/translations", response_model=TranslationResponse)
 async def translations(request: TranslationRequest):
