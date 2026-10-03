@@ -11,7 +11,8 @@
     "test:media": "node tests/media.mjs",
     "test:content": "node tests/content.mjs",
     "test:accessibility": "node tests/accessibility.mjs",
-    "test:deployment": "node tests/deployment.mjs"
+    "test:deployment": "node tests/deployment.mjs",
+    "test:rag": "python backend/scripts/smoke-rag.py"
   },
   "dependencies": {
     "react": "^19.1.0",
