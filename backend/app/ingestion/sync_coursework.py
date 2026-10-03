@@ -14,11 +14,7 @@ from app.ingestion.index_notebooks import ingest
 
 def write_status(destination: Path, status: str, **details: object) -> None:
     destination.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "status": status,
-        "updated_at": datetime.now(timezone.utc).isoformat(),
-        **details,
-    }
+    payload = {"status": status, "updated_at": datetime.now(timezone.utc).isoformat(), **details}
     target = destination / ".sync-status.json"
     temporary = destination / ".sync-status.json.tmp"
     temporary.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
@@ -28,7 +24,7 @@ def write_status(destination: Path, status: str, **details: object) -> None:
 async def sync_coursework(
     folder_id: str,
     destination: Path,
-    token: str,
+    token: str | None = None,
     batch_size: int = 32,
     force_download: bool = False,
     force_index: bool = False,
@@ -70,16 +66,12 @@ def main() -> None:
     parser.add_argument("--force-index", action="store_true")
     args = parser.parse_args()
 
-    token = os.getenv("GOOGLE_DRIVE_ACCESS_TOKEN")
     if not args.folder_id:
         parser.error("--folder-id or GOOGLE_DRIVE_FOLDER_ID is required")
-    if not token:
-        parser.error("GOOGLE_DRIVE_ACCESS_TOKEN is required")
 
     result = asyncio.run(sync_coursework(
         folder_id=args.folder_id,
         destination=args.destination,
-        token=token,
         batch_size=args.batch_size,
         force_download=args.force_download,
         force_index=args.force_index,
