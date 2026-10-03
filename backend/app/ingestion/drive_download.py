@@ -3,9 +3,9 @@
 This module deliberately only handles Drive -> local files. Parsing, chunking
 and Qdrant indexing remain in index_notebooks.py.
 
-Environment:
-  GOOGLE_DRIVE_ACCESS_TOKEN  short-lived OAuth access token
-  GOOGLE_DRIVE_FOLDER_ID     source folder id (or pass --folder-id)
+Authentication supports either a short-lived GOOGLE_DRIVE_ACCESS_TOKEN or,
+for unattended production sync, a refresh-token flow using credentials supplied
+only through the runtime environment.
 """
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from pathlib import Path
 import httpx
 
 DRIVE_API = "https://www.googleapis.com/drive/v3"
+GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 
 
 def load_state(path: Path) -> dict[str, str]:
@@ -35,6 +36,37 @@ def save_state(path: Path, state: dict[str, str]) -> None:
 
 def safe_name(file_id: str) -> str:
     return f"drive-{file_id}.ipynb"
+
+
+async def resolve_access_token() -> str:
+    """Return a usable Drive access token without persisting credentials."""
+    refresh_token = os.getenv("GOOGLE_DRIVE_REFRESH_TOKEN")
+    client_id = os.getenv("GOOGLE_DRIVE_CLIENT_ID")
+    client_secret = os.getenv("GOOGLE_DRIVE_CLIENT_SECRET")
+    if refresh_token and client_id and client_secret:
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.post(
+                GOOGLE_TOKEN_URL,
+                data={
+                    "client_id": client_id,
+                    "client_secret": client_secret,
+                    "refresh_token": refresh_token,
+                    "grant_type": "refresh_token",
+                },
+            )
+        response.raise_for_status()
+        token = response.json().get("access_token")
+        if not isinstance(token, str) or not token:
+            raise RuntimeError("Google OAuth refresh response did not contain an access token")
+        return token
+
+    access_token = os.getenv("GOOGLE_DRIVE_ACCESS_TOKEN")
+    if access_token:
+        return access_token
+    raise RuntimeError(
+        "Google Drive credentials are not configured: provide a refresh token, client id and client secret, "
+        "or GOOGLE_DRIVE_ACCESS_TOKEN for a one-off sync"
+    )
 
 
 async def list_files(client: httpx.AsyncClient, folder_id: str) -> list[dict]:
@@ -57,11 +89,12 @@ async def list_files(client: httpx.AsyncClient, folder_id: str) -> list[dict]:
             return result
 
 
-async def download_changed(folder_id: str, destination: Path, token: str, force: bool = False) -> tuple[int, int]:
+async def download_changed(folder_id: str, destination: Path, token: str | None = None, force: bool = False) -> tuple[int, int]:
     destination.mkdir(parents=True, exist_ok=True)
     state_path = destination / ".drive-state.json"
     state = load_state(state_path)
-    headers = {"Authorization": f"Bearer {token}"}
+    access_token = token or await resolve_access_token()
+    headers = {"Authorization": f"Bearer {access_token}"}
     changed = 0
     async with httpx.AsyncClient(headers=headers, timeout=120) as client:
         files = await list_files(client, folder_id)
@@ -87,12 +120,12 @@ def main() -> None:
     parser.add_argument("--folder-id", default=os.getenv("GOOGLE_DRIVE_FOLDER_ID"))
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
-    token = os.getenv("GOOGLE_DRIVE_ACCESS_TOKEN")
     if not args.folder_id:
         parser.error("--folder-id or GOOGLE_DRIVE_FOLDER_ID is required")
-    if not token:
-        parser.error("GOOGLE_DRIVE_ACCESS_TOKEN is required")
-    total, changed = asyncio.run(download_changed(args.folder_id, args.destination, token, args.force))
+    try:
+        total, changed = asyncio.run(download_changed(args.folder_id, args.destination, force=args.force))
+    except RuntimeError as exc:
+        parser.error(str(exc))
     print(f"done: {total} notebooks discovered, {changed} downloaded")
 
 
