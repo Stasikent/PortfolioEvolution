@@ -4,6 +4,7 @@ import { PortfolioAssistant } from "./components/PortfolioAssistant";
 import { EraProvider } from "./core/EraProvider";
 import { EraRouter } from "./core/EraRouter";
 import { EraTimeline } from "./core/EraTimeline";
+import { TranslationProvider } from "./core/TranslationProvider";
 import { NotFound } from "./core/NotFound";
 import "./styles.css";
 import "./effects/motion.css";
@@ -17,12 +18,12 @@ if (!knownPage) {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     {knownPage ? <EraProvider>
-      <a className="skip-link" href="#main">
-        Skip to content
-      </a>
-      <EraTimeline />
-      <EraRouter />
-      <PortfolioAssistant />
+      <TranslationProvider>
+        <a className="skip-link" href="#main">Skip to content</a>
+        <EraTimeline />
+        <EraRouter />
+        <PortfolioAssistant />
+      </TranslationProvider>
     </EraProvider> : <NotFound />}
   </React.StrictMode>,
 );
