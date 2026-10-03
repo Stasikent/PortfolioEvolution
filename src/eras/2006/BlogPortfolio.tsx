@@ -1,55 +1,46 @@
+import { useMemo } from "react";
 import { ProjectMediaGallery } from "../../components/ProjectMediaGallery";
 import { ProjectOverview } from "../../components/ProjectOverview";
-import { profile } from "../../content/profile";
+import { getProfile } from "../../content/profile";
 import { projects } from "../../content/projects";
 import { contacts } from "../../content/contacts";
 import { skills, historicalSkills } from "../../content/skills";
-import { timeline } from "../../content/timeline";
-import { buildProcess } from "../../content/process";
+import { getTimeline } from "../../content/timeline";
+import { getBuildProcess } from "../../content/process";
+import { useTranslations } from "../../core/TranslationProvider";
 import "./blog.css";
 
 export function BlogPortfolio() {
-  return <div className="blog-2006">
-    <div className="blog-paper">
-      <header className="blog-header" id="home" data-position>
-        <div className="blog-topline"><span>A PERSONAL WEBLOG</span><span>2006 DESIGN EDITION</span></div>
-        <div className="blog-masthead"><p className="blog-overline">Notes on code &amp; the things I build</p><h1>{profile.name}<span>’s weblog</span></h1><p>{profile.concept}</p><span className="blog-flower" aria-hidden="true">✳</span></div>
-        <nav className="blog-tabs" aria-label="Main navigation"><a href="#projects">The weblog</a><a href="#about">About the author</a><a href="#story">My story</a><a href="#contact">Elsewhere ↗</a></nav>
-      </header>
-      <div className="blog-layout">
-        <main id="main" tabIndex={-1}>
-          <section className="blog-welcome" id="about" data-position><span className="blog-label">A NOTE FROM THE AUTHOR</span><h2>{profile.message}</h2><p>{profile.introduction}</p><p className="blog-signature">— {profile.name}</p></section>
-          <section id="projects" data-position className="blog-feed">
-            <div className="blog-feed-heading"><h2>From the workbench</h2><span>{projects.length} project notes</span></div>
-            {projects.map((project, index) => <article className="blog-post" key={project.id} id={project.id} data-position>
-              <div className="blog-post-heading"><span className="blog-post-mark" aria-hidden="true">¶</span><div><p className="blog-post-meta">FILED UNDER <a href={`#${project.id}`}>{project.category}</a></p><h3><a href={`#${project.id}`}>{project.name}</a></h3></div></div>
-              <p className="blog-deck">{project.headline}</p><p>{project.description}</p>
-              <details className="blog-more"><summary>Read the rest of this entry <span aria-hidden="true">»</span><span className="sr-only"> — {project.name}</span></summary><div>
-                <ProjectOverview overview={project.overview} className="blog-case-facts" />
-          {project.caseStudy && <><h4>Case notes</h4><dl className="blog-case-facts"><div><dt>Challenge</dt><dd>{project.caseStudy.challenge}</dd></div><div><dt>My role</dt><dd>{project.caseStudy.ownership}</dd></div><div><dt>AI in the process</dt><dd>{project.caseStudy.aiContribution}</dd></div><div><dt>Delivery</dt><dd>{project.caseStudy.delivery}</dd></div></dl></>}
-                {project.journey && <><h4>From problem to tool</h4><ol>{project.journey.map(step => <li key={step}>{step}</li>)}</ol></>}
-                {project.features.length > 0 && <><h4>Inside the project</h4><ul>{project.features.map(feature => <li key={feature}>{feature}</li>)}</ul></>}
-                <h4>Technologies</h4><p>{project.technologies.join(" · ")}</p>
-                <ProjectMediaGallery media={project.media} />
-              </div></details>
-              <footer className="blog-post-footer"><span>Entry {String(index + 1).padStart(2, "0")}</span><div>{project.links.map(link => <a key={link.url} href={link.url} target="_blank" rel="noreferrer">{link.label} ↗</a>)}</div></footer>
-            </article>)}
-          </section>
-          <section className="blog-story" id="story" data-position><span className="blog-label">THE LONG VERSION</span><h2>A few chapters along the way.</h2>{timeline.map(item => <article key={item.label}><p className="blog-chapter">{item.label}</p><h3>{item.title}</h3><p>{item.description}</p></article>)}</section>
-          <section className="blog-toolkit" id="skills" data-position><span className="blog-label">MY TOOLBOX</span><h2>Technologies &amp; interests</h2><ul>{skills.map(skill => <li key={skill}>{skill}</li>)}</ul><h3>Earlier web experiments</h3><p>{historicalSkills.join(" / ")}</p></section>
-          <section className="blog-process" id="process" data-position><span className="blog-label">A NOTE TO SELF</span><h2>How I build</h2><ol>{buildProcess.map(step => <li key={step}>{step === "Read the code" ? <strong>{step}</strong> : step}</li>)}</ol></section>
-          <section className="blog-contact" id="contact" data-position><h2>Find me elsewhere</h2><p>{profile.roles}</p>{contacts.map(contact => <a key={contact.id} href={contact.url} target="_blank" rel="noreferrer">{contact.display} ↗</a>)}</section>
-        </main>
-        <aside className="blog-sidebar" aria-label="Weblog directory">
-          <div className="blog-author-stamp" aria-hidden="true"><span>&lt;/&gt;</span><small>A PERSONAL CORNER<br />OF THE INTERNET</small></div>
-          <section><h2>Hello, reader.</h2><p><strong>{profile.name}</strong></p><p>{profile.roles}</p><a href="#about">More about the author »</a></section>
-          <section><h2>On this weblog</h2><ul className="blog-side-links"><li><a href="#projects">Project notes <span>{projects.length}</span></a></li><li><a href="#story">The personal story</a></li><li><a href="#skills">The toolbox</a></li><li><a href="#process">How I build</a></li></ul></section>
-          <section><h2>Project index</h2><ul className="blog-side-links">{projects.map(project => <li key={project.id}><a href={`#${project.id}`}>{project.name} <span>»</span></a></li>)}</ul></section>
-          <section><h2>Blogroll / links</h2><ul className="blog-side-links">{contacts.map(contact => <li key={contact.id}><a href={contact.url} target="_blank" rel="noreferrer">{contact.label} ↗</a></li>)}</ul></section>
-          <p className="blog-era-note">An old-school weblog, with the current portfolio inside. 2006 is the design edition, not a publication date.</p>
-        </aside>
-      </div>
-      <footer className="blog-footer"><span>{profile.name} · A personal weblog</span><a href="#home">Back to the top ↑</a></footer>
-    </div>
-  </div>;
+  const profile = getProfile("en");
+  const timeline = getTimeline("en");
+  const buildProcess = getBuildProcess("en");
+  const entries = useMemo(() => {
+    const e: Record<string, string> = {
+      "2006.top.personal": "A PERSONAL WEBLOG", "2006.top.edition": "2006 DESIGN EDITION", "2006.overline": "Notes on code & the things I build", "2006.weblog": "’s weblog", "2006.mainNav": "Main navigation",
+      "2006.nav.weblog": "The weblog", "2006.nav.author": "About the author", "2006.nav.story": "My story", "2006.nav.elsewhere": "Elsewhere",
+      "2006.authorNote": "A NOTE FROM THE AUTHOR", "2006.profile.message": profile.message, "2006.profile.introduction": profile.introduction, "2006.profile.concept": profile.concept, "2006.profile.roles": profile.roles,
+      "2006.workbench": "From the workbench", "2006.projectNotes": `${projects.length} project notes`, "2006.filed": "FILED UNDER", "2006.readRest": "Read the rest of this entry", "2006.caseNotes": "Case notes", "2006.challenge": "Challenge", "2006.role": "My role", "2006.ai": "AI in the process", "2006.delivery": "Delivery", "2006.problemTool": "From problem to tool", "2006.inside": "Inside the project", "2006.technologies": "Technologies", "2006.entry": "Entry",
+      "2006.long": "THE LONG VERSION", "2006.chapters": "A few chapters along the way.", "2006.toolboxLabel": "MY TOOLBOX", "2006.toolbox": "Technologies & interests", "2006.earlier": "Earlier web experiments", "2006.noteSelf": "A NOTE TO SELF", "2006.build": "How I build", "2006.find": "Find me elsewhere", "2006.directory": "Weblog directory",
+      "2006.corner": "A PERSONAL CORNER\nOF THE INTERNET", "2006.hello": "Hello, reader.", "2006.moreAuthor": "More about the author", "2006.onWeblog": "On this weblog", "2006.projectNotesLink": "Project notes", "2006.personalStory": "The personal story", "2006.toolboxLink": "The toolbox", "2006.projectIndex": "Project index", "2006.blogroll": "Blogroll / links", "2006.eraNote": "An old-school weblog, with the current portfolio inside. 2006 is the design edition, not a publication date.", "2006.personalWeblog": "A personal weblog", "2006.backTop": "Back to the top",
+    };
+    projects.forEach(project => {
+      const p = `projects.${project.id}`;
+      e[`${p}.category`] = project.category; e[`${p}.headline`] = project.headline; e[`${p}.description`] = project.description;
+      project.features.forEach((text, i) => { e[`${p}.features.${i}`] = text; }); project.journey?.forEach((text, i) => { e[`${p}.journey.${i}`] = text; }); project.links.forEach((link, i) => { e[`${p}.links.${i}`] = link.label; });
+      if (project.caseStudy) { e[`${p}.case.challenge`] = project.caseStudy.challenge; e[`${p}.case.ownership`] = project.caseStudy.ownership; e[`${p}.case.ai`] = project.caseStudy.aiContribution; e[`${p}.case.delivery`] = project.caseStudy.delivery; }
+    });
+    timeline.forEach((item, i) => { e[`2006.timeline.${i}.title`] = item.title; e[`2006.timeline.${i}.description`] = item.description; }); buildProcess.forEach((step, i) => { e[`2006.process.${i}`] = step; });
+    return e;
+  }, [profile, timeline, buildProcess]);
+  const { t } = useTranslations(entries);
+  return <div className="blog-2006"><div className="blog-paper">
+    <header className="blog-header" id="home" data-position><div className="blog-topline"><span>{t("2006.top.personal", "A PERSONAL WEBLOG")}</span><span>{t("2006.top.edition", "2006 DESIGN EDITION")}</span></div><div className="blog-masthead"><p className="blog-overline">{t("2006.overline", "Notes on code & the things I build")}</p><h1>{profile.name}<span>{t("2006.weblog", "’s weblog")}</span></h1><p>{t("2006.profile.concept", profile.concept)}</p><span className="blog-flower" aria-hidden="true">✳</span></div><nav className="blog-tabs" aria-label={t("2006.mainNav", "Main navigation")}><a href="#projects">{t("2006.nav.weblog", "The weblog")}</a><a href="#about">{t("2006.nav.author", "About the author")}</a><a href="#story">{t("2006.nav.story", "My story")}</a><a href="#contact">{t("2006.nav.elsewhere", "Elsewhere")} ↗</a></nav></header>
+    <div className="blog-layout"><main id="main" tabIndex={-1}><section className="blog-welcome" id="about" data-position><span className="blog-label">{t("2006.authorNote", "A NOTE FROM THE AUTHOR")}</span><h2>{t("2006.profile.message", profile.message)}</h2><p>{t("2006.profile.introduction", profile.introduction)}</p><p className="blog-signature">— {profile.name}</p></section>
+      <section id="projects" data-position className="blog-feed"><div className="blog-feed-heading"><h2>{t("2006.workbench", "From the workbench")}</h2><span>{t("2006.projectNotes", `${projects.length} project notes`)}</span></div>{projects.map((project, index) => { const p = `projects.${project.id}`; return <article className="blog-post" key={project.id} id={project.id} data-position><div className="blog-post-heading"><span className="blog-post-mark" aria-hidden="true">¶</span><div><p className="blog-post-meta">{t("2006.filed", "FILED UNDER")} <a href={`#${project.id}`}>{t(`${p}.category`, project.category)}</a></p><h3><a href={`#${project.id}`}>{project.name}</a></h3></div></div><p className="blog-deck">{t(`${p}.headline`, project.headline)}</p><p>{t(`${p}.description`, project.description)}</p><details className="blog-more"><summary>{t("2006.readRest", "Read the rest of this entry")} <span aria-hidden="true">»</span><span className="sr-only"> — {project.name}</span></summary><div><ProjectOverview overview={project.overview} className="blog-case-facts" translationPrefix={p} />
+        {project.caseStudy && <><h4>{t("2006.caseNotes", "Case notes")}</h4><dl className="blog-case-facts"><div><dt>{t("2006.challenge", "Challenge")}</dt><dd>{t(`${p}.case.challenge`, project.caseStudy.challenge)}</dd></div><div><dt>{t("2006.role", "My role")}</dt><dd>{t(`${p}.case.ownership`, project.caseStudy.ownership)}</dd></div><div><dt>{t("2006.ai", "AI in the process")}</dt><dd>{t(`${p}.case.ai`, project.caseStudy.aiContribution)}</dd></div><div><dt>{t("2006.delivery", "Delivery")}</dt><dd>{t(`${p}.case.delivery`, project.caseStudy.delivery)}</dd></div></dl></>}
+        {project.journey && <><h4>{t("2006.problemTool", "From problem to tool")}</h4><ol>{project.journey.map((step, i) => <li key={step}>{t(`${p}.journey.${i}`, step)}</li>)}</ol></>}{project.features.length > 0 && <><h4>{t("2006.inside", "Inside the project")}</h4><ul>{project.features.map((feature, i) => <li key={feature}>{t(`${p}.features.${i}`, feature)}</li>)}</ul></>}<h4>{t("2006.technologies", "Technologies")}</h4><p>{project.technologies.join(" · ")}</p><ProjectMediaGallery media={project.media} /></div></details><footer className="blog-post-footer"><span>{t("2006.entry", "Entry")} {String(index + 1).padStart(2, "0")}</span><div>{project.links.map((link, i) => <a key={link.url} href={link.url} target="_blank" rel="noreferrer">{t(`${p}.links.${i}`, link.label)} ↗</a>)}</div></footer></article>; })}</section>
+      <section className="blog-story" id="story" data-position><span className="blog-label">{t("2006.long", "THE LONG VERSION")}</span><h2>{t("2006.chapters", "A few chapters along the way.")}</h2>{timeline.map((item, i) => <article key={item.label}><p className="blog-chapter">{item.label}</p><h3>{t(`2006.timeline.${i}.title`, item.title)}</h3><p>{t(`2006.timeline.${i}.description`, item.description)}</p></article>)}</section><section className="blog-toolkit" id="skills" data-position><span className="blog-label">{t("2006.toolboxLabel", "MY TOOLBOX")}</span><h2>{t("2006.toolbox", "Technologies & interests")}</h2><ul>{skills.map(skill => <li key={skill}>{skill}</li>)}</ul><h3>{t("2006.earlier", "Earlier web experiments")}</h3><p>{historicalSkills.join(" / ")}</p></section><section className="blog-process" id="process" data-position><span className="blog-label">{t("2006.noteSelf", "A NOTE TO SELF")}</span><h2>{t("2006.build", "How I build")}</h2><ol>{buildProcess.map((step, i) => <li key={step}>{i === 4 ? <strong>{t(`2006.process.${i}`, step)}</strong> : t(`2006.process.${i}`, step)}</li>)}</ol></section><section className="blog-contact" id="contact" data-position><h2>{t("2006.find", "Find me elsewhere")}</h2><p>{t("2006.profile.roles", profile.roles)}</p>{contacts.map(contact => <a key={contact.id} href={contact.url} target="_blank" rel="noreferrer">{contact.display} ↗</a>)}</section></main>
+      <aside className="blog-sidebar" aria-label={t("2006.directory", "Weblog directory")}><div className="blog-author-stamp" aria-hidden="true"><span>&lt;/&gt;</span><small>{t("2006.corner", "A PERSONAL CORNER\nOF THE INTERNET")}</small></div><section><h2>{t("2006.hello", "Hello, reader.")}</h2><p><strong>{profile.name}</strong></p><p>{t("2006.profile.roles", profile.roles)}</p><a href="#about">{t("2006.moreAuthor", "More about the author")} »</a></section><section><h2>{t("2006.onWeblog", "On this weblog")}</h2><ul className="blog-side-links"><li><a href="#projects">{t("2006.projectNotesLink", "Project notes")} <span>{projects.length}</span></a></li><li><a href="#story">{t("2006.personalStory", "The personal story")}</a></li><li><a href="#skills">{t("2006.toolboxLink", "The toolbox")}</a></li><li><a href="#process">{t("2006.build", "How I build")}</a></li></ul></section><section><h2>{t("2006.projectIndex", "Project index")}</h2><ul className="blog-side-links">{projects.map(project => <li key={project.id}><a href={`#${project.id}`}>{project.name} <span>»</span></a></li>)}</ul></section><section><h2>{t("2006.blogroll", "Blogroll / links")}</h2><ul className="blog-side-links">{contacts.map(contact => <li key={contact.id}><a href={contact.url} target="_blank" rel="noreferrer">{contact.label} ↗</a></li>)}</ul></section><p className="blog-era-note">{t("2006.eraNote", "An old-school weblog, with the current portfolio inside. 2006 is the design edition, not a publication date.")}</p></aside></div>
+    <footer className="blog-footer"><span>{profile.name} · {t("2006.personalWeblog", "A personal weblog")}</span><a href="#home">{t("2006.backTop", "Back to the top")} ↑</a></footer>
+  </div></div>;
 }
