@@ -12,8 +12,12 @@ services:
       EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-https://api.vsegpt.ru/v1}
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+      COURSEWORK_CACHE_DIR: /data/coursework
+      DRIVE_BATCH_SIZE: ${DRIVE_BATCH_SIZE:-32}
     ports:
       - "8000:8000"
+    volumes:
+      - coursework_cache:/data/coursework
     depends_on:
       qdrant:
         condition: service_started
@@ -28,3 +32,4 @@ services:
 
 volumes:
   qdrant_data:
+  coursework_cache:
