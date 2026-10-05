@@ -1,11 +1,13 @@
+import os
+import time
+from collections import defaultdict, deque
 import hashlib
 import json
-import os
 from pathlib import Path
 from typing import Literal
 
 import httpx
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -23,6 +25,37 @@ app.add_middleware(
 vector_store = VectorStore()
 TRANSLATION_CACHE_PATH = Path(os.getenv("TRANSLATION_CACHE_PATH", "/tmp/portfolio-translations.json"))
 COURSEWORK_CACHE_DIR = Path(os.getenv("COURSEWORK_CACHE_DIR", "/data/coursework"))
+CHAT_RATE_MINUTE = int(os.getenv("CHAT_RATE_MINUTE", "10"))
+CHAT_RATE_HOUR = int(os.getenv("CHAT_RATE_HOUR", "60"))
+
+_chat_requests: dict[str, deque[float]] = defaultdict(deque)
+
+
+def check_chat_rate_limit(client_ip: str) -> None:
+    now = time.monotonic()
+    requests = _chat_requests[client_ip]
+
+    while requests and requests[0] <= now - 3600:
+        requests.popleft()
+
+    last_minute = sum(timestamp > now - 60 for timestamp in requests)
+
+    if last_minute >= CHAT_RATE_MINUTE:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many requests. Please try again shortly.",
+            headers={"Retry-After": "60"},
+        )
+
+    if len(requests) >= CHAT_RATE_HOUR:
+        retry_after = max(1, int(3600 - (now - requests[0])))
+        raise HTTPException(
+            status_code=429,
+            detail="Hourly request limit exceeded.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
+    requests.append(now)
 
 class Source(BaseModel):
     title: str
@@ -176,7 +209,10 @@ async def translations(request: TranslationRequest):
     return TranslationResponse(language=request.language, translations=translations, cached=cached, generated=generated)
 
 @app.post("/api/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    sources = await retrieve_context(request.question)
-    answer = await call_llm(request.question, sources, request.language)
+async def chat(payload: ChatRequest, request: Request):
+    client_ip = request.client.host if request.client else "unknown"
+    check_chat_rate_limit(client_ip)
+
+    sources = await retrieve_context(payload.question)
+    answer = await call_llm(payload.question, sources, payload.language)
     return ChatResponse(answer=answer, sources=sources, grounded=bool(sources))

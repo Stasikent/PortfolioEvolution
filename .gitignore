@@ -4,3 +4,5 @@ dist/
 .DS_Store
 screenshots/
 .verification/
+__pycache__/
+*.py[cod]
