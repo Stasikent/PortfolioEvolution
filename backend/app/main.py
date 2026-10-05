@@ -31,7 +31,7 @@ class Source(BaseModel):
     kind: Literal["github", "coursework", "portfolio"] = "github"
 
 class ChatRequest(BaseModel):
-    question: str = Field(min_length=2, max_length=2000)
+    question: str = Field(min_length=2, max_length=1000)
     language: str = Field(default="en", min_length=2, max_length=40)
 
 class ChatResponse(BaseModel):
@@ -50,12 +50,27 @@ class TranslationResponse(BaseModel):
     cached: list[str]
     generated: list[str]
 
-SYSTEM_PROMPT = """You are the source-grounded assistant for Stanislav's developer portfolio.
-Answer ONLY from the evidence supplied in CONTEXT. Never invent experience, employers, technologies,
-results, dates, or proficiency. If the evidence is insufficient, say that the portfolio does not contain
-enough evidence. Be concise and useful to a recruiter. Mention which sources support the answer.
+SYSTEM_PROMPT = """You are the source-grounded AI assistant for Stanislav's developer portfolio.
+
+Answer ONLY from evidence supplied in CONTEXT. Never invent experience, employers, technologies,
+results, dates, education, or proficiency. If the evidence is insufficient, clearly say so.
+
+Your audience is primarily recruiters and technical hiring managers.
+
+Response style:
+- Answer the question directly in the first sentence.
+- Keep normal answers concise: usually 3-6 short paragraphs or bullet points.
+- Aim for roughly 500-1000 characters for a normal answer.
+- Do not dump or summarize every retrieved source.
+- Group related skills, projects, or technologies instead of producing long enumerations.
+- Mention only the most relevant evidence.
+- Do not include a separate bibliography unless the user explicitly asks for sources.
+- If useful, finish with one short sentence offering a relevant follow-up.
+- Give a longer detailed answer only when the user explicitly asks for detail.
+
 Always answer in the requested RESPONSE LANGUAGE, while preserving code, product names and technology names.
 """
+
 TRANSLATION_PROMPT = """You translate UI and portfolio copy. Preserve meaning, tone, product names,
 URLs, code, technology names and formatting. Return ONLY a valid JSON object with exactly the same keys
 as the supplied object and translated string values. Do not add commentary or markdown.
@@ -129,7 +144,7 @@ async def call_llm(question: str, sources: list[Source], language: str) -> str:
     if not context:
         fallbacks = {"ru": "В доступных источниках пока не найдено достаточно подтверждений для уверенного ответа.", "en": "The available sources do not contain enough evidence for a confident answer."}
         return fallbacks.get(language.lower(), "The available sources do not contain enough evidence for a confident answer.")
-    payload = {"model": model, "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": f"RESPONSE LANGUAGE: {language}\n\nQUESTION:\n{question}\n\nCONTEXT:\n{context}"}], "temperature": 0.1}
+    payload = {"model": model, "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": f"RESPONSE LANGUAGE: {language}\n\nQUESTION:\n{question}\n\nCONTEXT:\n{context}"}], "temperature": 0.1, "max_tokens": 450}
     async with httpx.AsyncClient(timeout=45) as client: response = await client.post(f"{base_url}/chat/completions", headers={"Authorization": f"Bearer {api_key}"}, json=payload)
     if response.status_code >= 400: raise HTTPException(status_code=502, detail="LLM provider request failed")
     return response.json()["choices"][0]["message"]["content"].strip()
