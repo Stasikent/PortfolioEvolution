@@ -16,6 +16,7 @@ export type TranslationResponse = {
   generated: string[];
 };
 
+const API_URL = (import.meta.env.VITE_AI_API_URL || "").replace(/\/$/, "");
 const memoryCache = new Map<string, LocalTranslationMap>();
 
 function storageKey(language: string) {
@@ -64,7 +65,8 @@ export async function translateEntries(request: TranslationRequest): Promise<Tra
     return { language: request.language, translations: validLocal, cached: Object.keys(request.entries), generated: [] };
   }
 
-  const response = await fetch("/api/translations", {
+  if (!API_URL) throw new Error("Translation backend is not configured");
+  const response = await fetch(`${API_URL}/api/translations`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...request, entries: missing }),
